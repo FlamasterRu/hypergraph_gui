@@ -68,6 +68,7 @@ void MainWindow::on_actionCursor_triggered(bool checked)
     if (checked)
     {
         // выключаем все инструменты
+        ui->centralwidget->ChangeState(PaintArea::Cursor);
     }
 }
 
@@ -78,6 +79,7 @@ void MainWindow::on_actionAddVertex_triggered(bool checked)
     if (checked)
     {
         // добавляем вершину
+        ui->centralwidget->ChangeState(PaintArea::AddVertex);
     }
 }
 
@@ -88,6 +90,7 @@ void MainWindow::on_actionDeleteVertex_triggered(bool checked)
     if (checked)
     {
         // удаляем вершину
+        ui->centralwidget->ChangeState(PaintArea::DeleteVertex);
     }
 }
 
@@ -98,6 +101,7 @@ void MainWindow::on_actionAddEdge_triggered(bool checked)
     if (checked)
     {
         // добавляем ребро
+        ui->centralwidget->ChangeState(PaintArea::AddEdge);
     }
 }
 
@@ -108,8 +112,12 @@ void MainWindow::on_actionDeleteEdge_triggered(bool checked)
     if (checked)
     {
         // удаляем ребро
+        ui->centralwidget->ChangeState(PaintArea::DeleteEdge);
     }
 }
+
+
+
 
 
 

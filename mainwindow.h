@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QActionGroup>
 #include <QTextStream>
+#include "hypergraph_struct/hypergraph.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -48,5 +49,7 @@ private:
 
 
     QActionGroup* mTools;
+
+    hg::Hypergraphe mGraf;
 };
 #endif // MAINWINDOW_H
