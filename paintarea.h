@@ -15,6 +15,17 @@ class PaintArea;
 class PaintArea : public QWidget
 {
     Q_OBJECT
+private:
+    struct Vertex
+    {
+        int x;
+        int y;
+        int name;   // уникальное имя вершины
+    };
+    struct Edge
+    {
+        QVector<Vertex> v;  // список вершин, инцидентных ребру
+    };
 
 public:
     explicit PaintArea(QWidget *parent = nullptr);
@@ -38,28 +49,43 @@ private:
     void EraseVertex(const int x, const int y);
     void EraseEdge(const int x, const int y);
 
+    Vertex FindVertex(const int x, const int y, const double r);  // ищет вершину, близжайшую к координатам и внутри радиуса (если не найдёт, вернёт вершину с именем -1)
+    bool AddVertexToLastEdge(const int x, const int y); // добавляет вершину к создаваемому ребру
+
+    void FillColorList();   // добавляет цвета в список mColorList
+
+
+
 
 
     // константы
-    const int VERTEXDIAM = 30;
+    const int VERTEXDIAM = 30;  // диаметр вершины
+    const double RSEARCH = 20.; // радиус поиска вершины при нажатии на виджет
 
 
     // поля
     Ui::PaintArea *ui;
     QTextStream out;    // для отображения в консоль промежуточной информации
-    QPainter mPainter;  // в нём рисуются фигуры
 
     State mCurrentState = Cursor;    // выбранный инструмент для редактирования
 
-    struct Vertex
-    {
-        int x;
-        int y;
-        bool rendered = false;
-    };
+    QVector<Vertex> mVertexList;    // список всех вершин
 
-    QVector<Vertex> mVertexList;
-
+    Edge mLastEdge; // список вершин для добавляемого ребра
+    QVector<Edge> mEdgeList;    // список всех рёбер
+    QVector<QColor> mColorsList;    // список цветов, чтобы все рёбра были цветные
 };
 
 #endif // PAINTAREA_H
+
+
+
+
+
+
+
+
+
+
+
+
