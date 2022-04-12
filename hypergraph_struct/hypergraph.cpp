@@ -277,7 +277,7 @@ namespace hg
 			return h_AdjacencyMatrixInt;
 		}
 		else
-		{
+        {
             h_AdjacencyMatrixInt.resize(h_NumOfVertex, h_NumOfEdge);
 			for (auto it1 = h_ListVertex.begin(); it1 != h_ListVertex.end(); ++it1)
 			{
@@ -286,7 +286,8 @@ namespace hg
                     h_AdjacencyMatrixInt( (*it1).get()->v_Id, (*it2).get()->e_Id ) = 1;
 				}
 			}
-			h_IsAdjacencyMatrixActual = true;
+            h_IsAdjacencyMatrixActual = true;
+            return h_AdjacencyMatrixInt;
 		}
 	}
 	///////////////////////////////////////////////////////
@@ -354,23 +355,8 @@ namespace hg
 	////////////////////
 	std::ostream& operator<< (std::ostream& out, Hypergraphe& h)
 	{
-		h.getAdjacencyMatrix();
-		for (int i = 0; i < h.h_NumOfVertex; ++i)
-		{
-			for (int j = 0; j < h.h_NumOfEdge; ++j)
-			{
-				out.width(4);
-				if (j == h.h_NumOfEdge - 1)
-				{
-                    out << h.h_AdjacencyMatrixInt(i, j);
-				}
-				else
-				{
-                    out << h.h_AdjacencyMatrixInt(i, j) << " ";
-				}
-			}
-			out << "\n";
-		}
+        arma::Mat<int> matrix(h.getAdjacencyMatrix());
+        out << matrix << "\n";
 		return out;
 	}
 

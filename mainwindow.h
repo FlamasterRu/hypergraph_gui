@@ -5,6 +5,7 @@
 #include <QActionGroup>
 #include <QTextStream>
 #include "hypergraph_struct/hypergraph.h"
+#include <QSet>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,6 +18,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+public slots:
+    void PaintAreaMouseClicked(int posX, int posY, Qt::MouseButton button);
 
 private slots:
     void on_actionCreateNew_triggered();
@@ -44,6 +48,13 @@ private slots:
     void on_actionDeleteEdge_triggered(bool checked);
 
 private:
+    // методы
+    int FindVertex(const int x, const int y, const double r);    // ищет вершину в окружности радиусом r
+
+    // константы
+    const double RSEARCH = 20.; // радиус поиска вершины при нажатии на виджет
+
+    // поля
     Ui::MainWindow *ui;
     QTextStream out;    // для отображения в консоль промежуточной информации
 
@@ -51,5 +62,6 @@ private:
     QActionGroup* mTools;
 
     hg::Hypergraphe mGraf;
+    QSet<int> mTempEdge;
 };
 #endif // MAINWINDOW_H

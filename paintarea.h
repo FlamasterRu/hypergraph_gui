@@ -39,6 +39,9 @@ public:
 
     void ChangeState(const State state);     // меняет инструмент для отрисовки
 
+signals:
+    void MouseClicked(int posX, int posY, Qt::MouseButton button);
+
 
 
 

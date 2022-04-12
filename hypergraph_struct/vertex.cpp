@@ -33,6 +33,11 @@ namespace hg
 		return v_Str;
 	}
 
+    const std::pair<int, int> Vertex::getPosition() const
+    {
+        return std::pair<int, int>(v_PosX, v_PosY);
+    }
+
 	void Vertex::setWeight(const int w)
 	{
 		v_Weight = w;
@@ -42,5 +47,11 @@ namespace hg
 	{
 		v_Str = s;
 	}
+
+    void Vertex::setPosition(const int posX, const int posY)
+    {
+        v_PosX = posX;
+        v_PosY = posY;
+    }
 
 }	// namespace hypgr

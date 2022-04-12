@@ -17,9 +17,9 @@ PaintArea::~PaintArea()
 
 void PaintArea::mousePressEvent(QMouseEvent* event)
 {
+    emit MouseClicked(event->x(), event->y(), event->button());
     int x = event->x();
     int y = event->y();
-    out << "PaintArea: " << x << " " << y << " " << event->button() << endl;
     if (event->button() == Qt::LeftButton)
     {
         if (mCurrentState == AddVertex)
