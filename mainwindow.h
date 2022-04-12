@@ -5,7 +5,7 @@
 #include <QActionGroup>
 #include <QTextStream>
 #include "hypergraph_struct/hypergraph.h"
-#include <QSet>
+#include <QList>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -39,13 +39,6 @@ private slots:
 
     void on_actionCursor_triggered(bool checked);
 
-    void on_actionAddVertex_triggered(bool checked);
-
-    void on_actionDeleteVertex_triggered(bool checked);
-
-    void on_actionAddEdge_triggered(bool checked);
-
-    void on_actionDeleteEdge_triggered(bool checked);
 
 private:
     // методы
@@ -62,6 +55,6 @@ private:
     QActionGroup* mTools;
 
     hg::Hypergraphe mGraf;
-    QSet<int> mTempEdge;
+    QList<int> mTempEdge;
 };
 #endif // MAINWINDOW_H

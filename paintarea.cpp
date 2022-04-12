@@ -18,95 +18,32 @@ PaintArea::~PaintArea()
 void PaintArea::mousePressEvent(QMouseEvent* event)
 {
     emit MouseClicked(event->x(), event->y(), event->button());
-    int x = event->x();
-    int y = event->y();
-    if (event->button() == Qt::LeftButton)
-    {
-        if (mCurrentState == AddVertex)
-        {
-            DrawVertex(x, y);
-        }
-        if (mCurrentState == AddEdge)
-        {
-            // левой кнопкой добавляем вершины к ребру
-            AddVertexToLastEdge(x, y);
-        }
-    }
-    else if (event->button() == Qt::RightButton)
-    {
-        if (mCurrentState == AddEdge)
-        {
-            // правой кнопкой завершаем добавление вершин к ребру и создаём это ребро
-            DrawEdge(x, y);
-        }
-    }
-}
-
-void PaintArea::DrawVertex(const int x, const int y)
-{
-    Vertex v;
-    v.x = x;
-    v.y = y;
-    int name = 0;
-    for (const Vertex& t : mVertexList)
-    {
-        if (t.name > name)
-            name = t.name;
-    }
-    v.name = name + 1;
-    mVertexList.push_back(v);
-
-    repaint();
-}
-
-void PaintArea::DrawEdge(const int x, const int y)
-{
-    // Если мы добавили последнюю вершину к ребру, то добавляем ребро
-    if (AddVertexToLastEdge(x, y))
-    {
-        // Если у ребра больше 1 вершины
-        if (mLastEdge.v.size() > 1)
-        {
-            mEdgeList.push_back(mLastEdge);
-            mLastEdge.v.clear();
-            repaint();
-        }
-    }
-    else // отменили добавление ребра
-    {
-        mLastEdge.v.clear();
-    }
-
-}
-
-void PaintArea::EraseVertex(const int x, const int y)
-{
-    repaint();
-}
-
-void PaintArea::EraseEdge(const int x, const int y)
-{
-    repaint();
 }
 
 void PaintArea::paintEvent(QPaintEvent *event)
 {
+    out << "PaintArea::paintEvent: " << mGraph << endl;
+    if (mGraph == nullptr)
+    {
+        return;
+    }
     Q_UNUSED(event);
     QPainter painter(this); // Создаём объект отрисовщика
 
     int j = 0;
     // Отрисовываем рёбра первыми
-    for (const Edge& e : mEdgeList)
+    for (auto edge : mGraph->getEdgeList())
     {
         painter.setPen(QPen(mColorsList.at(j%mColorsList.size()), 3));
         ++j;
-        for (int i = 0; i < e.v.size() - 1; ++i)
+        auto it1 = edge->getListVertex().begin();
+        auto it2 = it1;
+        ++it2;
+        for (; it2 != edge->getListVertex().end(); ++it1, ++it2)
         {
-            int x1 = e.v.at(i).x;
-            int y1 = e.v.at(i).y;
-            int x2 = e.v.at(i+1).x;
-            int y2 = e.v.at(i+1).y;
-            painter.drawLine(x1, y1, x2, y2);
+            auto pos1 = (*it1)->getPosition();
+            auto pos2 = (*it2)->getPosition();
+            painter.drawLine(pos1.first, pos1.second, pos2.first, pos2.second);
         }
     }
 
@@ -115,61 +52,25 @@ void PaintArea::paintEvent(QPaintEvent *event)
     painter.setFont(QFont("Monospace", 11, 2));
     // отрисовываем вершины в конце, чтобы перекрыть ими рёбра
     int i = 1;
-    for (const Vertex& v : mVertexList)
+    for (auto vertex : mGraph->getVertexList())
     {
-        painter.drawEllipse(v.x - VERTEXDIAM/2, v.y - VERTEXDIAM/2, VERTEXDIAM, VERTEXDIAM);
+        auto pos = vertex->getPosition();
+        int x = pos.first;
+        int y = pos.second;
+        painter.drawEllipse(x - VERTEXDIAM/2, y - VERTEXDIAM/2, VERTEXDIAM, VERTEXDIAM);
         // номера вершин после отрисовки вершин
-        QRect textRect(v.x - VERTEXDIAM/2, v.y - VERTEXDIAM/2, VERTEXDIAM, VERTEXDIAM);
+        QRect textRect(x - VERTEXDIAM/2, y - VERTEXDIAM/2, VERTEXDIAM, VERTEXDIAM);
         painter.drawText(textRect, Qt::AlignCenter, QString::number(i));
         ++i;
     }
 }
 
-void PaintArea::ChangeState(const State state)
+void PaintArea::PaintGraph(const hg::Hypergraphe* graph)
 {
-    mCurrentState = state;
+    mGraph = graph;
+    repaint();
 }
 
-bool PaintArea::AddVertexToLastEdge(const int x, const int y)
-{
-    Vertex nearestVertex = FindVertex(x, y, RSEARCH);
-    if (nearestVertex.name == -1)
-    {
-       out << "Can't find vertex in: x=" << x << ", y=" << y << ", r=" << RSEARCH << endl;
-       return false;
-    }
-    else
-    {
-        // чтобы в одно ребро не добавить несколько раз одну и ту же вершину
-        for (const Vertex& v : mLastEdge.v)
-        {
-            if (v.name == nearestVertex.name)
-            {
-                out << "Can't add contains vertex: " << v.name << endl;
-                return false;
-            }
-        }
-        mLastEdge.v.push_back(nearestVertex);
-        return true;
-    }
-}
-
-PaintArea::Vertex PaintArea::FindVertex(const int x, const int y, const double r)
-{
-    Vertex nearestVertex;
-    nearestVertex.name = -1;
-    double minDist = 1e20;
-    for (const Vertex& v : mVertexList)
-    {
-        double d = std::sqrt( std::pow(x-v.x, 2.) + std::pow(y-v.y, 2.) );
-        if ( (d < r) && (d < minDist) )
-        {
-            minDist = d;
-            nearestVertex = v;
-        }
-    }
-    return nearestVertex;
-}
 
 void PaintArea::FillColorList()
 {

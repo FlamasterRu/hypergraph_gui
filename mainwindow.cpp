@@ -69,55 +69,6 @@ void MainWindow::on_actionCursor_triggered(bool checked)
 {
     out << "on_actionCursor_triggered: " << ui->actionCursor->isChecked() << " " << ui->actionAddVertex->isChecked() << " " << ui->actionDeleteVertex->isChecked() <<
         " " << ui->actionAddEdge->isChecked() << " " << ui->actionDeleteEdge->isChecked() << endl;
-    if (checked)
-    {
-        // выключаем все инструменты
-        ui->centralwidget->ChangeState(PaintArea::Cursor);
-    }
-}
-
-void MainWindow::on_actionAddVertex_triggered(bool checked)
-{
-    out << "on_actionAddVertex_triggered: " << ui->actionCursor->isChecked() << " " << ui->actionAddVertex->isChecked() << " " << ui->actionDeleteVertex->isChecked() <<
-           " " << ui->actionAddEdge->isChecked() << " " << ui->actionDeleteEdge->isChecked() << endl;
-    if (checked)
-    {
-        // добавляем вершину
-        ui->centralwidget->ChangeState(PaintArea::AddVertex);
-    }
-}
-
-void MainWindow::on_actionDeleteVertex_triggered(bool checked)
-{
-    out << "on_actionDeleteVertex_triggered: " << ui->actionCursor->isChecked() << " " << ui->actionAddVertex->isChecked() << " " << ui->actionDeleteVertex->isChecked() <<
-           " " << ui->actionAddEdge->isChecked() << " " << ui->actionDeleteEdge->isChecked() << endl;
-    if (checked)
-    {
-        // удаляем вершину
-        ui->centralwidget->ChangeState(PaintArea::DeleteVertex);
-    }
-}
-
-void MainWindow::on_actionAddEdge_triggered(bool checked)
-{
-    out << "on_actionAddEdge_triggered: " << ui->actionCursor->isChecked() << " " << ui->actionAddVertex->isChecked() << " " << ui->actionDeleteVertex->isChecked() <<
-           " " << ui->actionAddEdge->isChecked() << " " << ui->actionDeleteEdge->isChecked() << endl;
-    if (checked)
-    {
-        // добавляем ребро
-        ui->centralwidget->ChangeState(PaintArea::AddEdge);
-    }
-}
-
-void MainWindow::on_actionDeleteEdge_triggered(bool checked)
-{
-    out << "on_actionDeleteEdge_triggered: " << ui->actionCursor->isChecked() << " " << ui->actionAddVertex->isChecked() << " " << ui->actionDeleteVertex->isChecked() <<
-           " " << ui->actionAddEdge->isChecked() << " " << ui->actionDeleteEdge->isChecked() << endl;
-    if (checked)
-    {
-        // удаляем ребро
-        ui->centralwidget->ChangeState(PaintArea::DeleteEdge);
-    }
 }
 
 void MainWindow::PaintAreaMouseClicked(int posX, int posY, Qt::MouseButton button)
@@ -134,9 +85,9 @@ void MainWindow::PaintAreaMouseClicked(int posX, int posY, Qt::MouseButton butto
         {
             // левой кнопкой составляем список вершин для ребра
             int vertexId = FindVertex(posX, posY, RSEARCH);
-            if (vertexId != -1)
+            if ( (vertexId != -1) && (!mTempEdge.contains(vertexId)) )
             {
-                mTempEdge.insert(vertexId);
+                mTempEdge.push_back(vertexId);
             }
         }
     }
@@ -146,18 +97,15 @@ void MainWindow::PaintAreaMouseClicked(int posX, int posY, Qt::MouseButton butto
         {
             // добавляем последнюю вершину к ребру и создаём ребро, если правой кнопкой нажать на пустоту, действие отменяется
             int vertexId = FindVertex(posX, posY, RSEARCH);
-            if (vertexId != -1)
+            if ( (vertexId != -1) && (!mTempEdge.contains(vertexId)) && (mTempEdge.size() >= 1) )
             {
-                mTempEdge.insert(vertexId);
+                mTempEdge.push_back(vertexId);
                 // чтобы в ребре было минимум две вершины
-                if ((mTempEdge.size() >= 2))
+                auto edge = mGraf.addEdge();
+                for (const int id : mTempEdge)
                 {
-                    auto edge = mGraf.addEdge();
-                    for (const int id : mTempEdge)
-                    {
-                        auto vertex = mGraf.getVertexByIndex(id);
-                        mGraf.linkVertexAndEdge(vertex, edge);
-                    }
+                    auto vertex = mGraf.getVertexByIndex(id);
+                    mGraf.linkVertexAndEdge(vertex, edge);
                 }
             }
             mTempEdge.clear();
@@ -167,6 +115,7 @@ void MainWindow::PaintAreaMouseClicked(int posX, int posY, Qt::MouseButton butto
     {
         std::cout << mGraf << std::endl;
     }
+    ui->centralwidget->PaintGraph(&mGraf);
 }
 
 int MainWindow::FindVertex(const int x, const int y, const double r)
