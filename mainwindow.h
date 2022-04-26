@@ -43,6 +43,8 @@ private slots:
 private:
     // методы
     int FindVertex(const int x, const int y, const double r);    // ищет вершину в окружности радиусом r
+    bool WriteToFile(const hg::Hypergraphe& graf, const std::string fileName);
+    bool ReadFromFile(const std::string fileName);
 
     // константы
     const double RSEARCH = 20.; // радиус поиска вершины при нажатии на виджет
@@ -56,5 +58,7 @@ private:
 
     hg::Hypergraphe mGraf;
     QList<int> mTempEdge;
+
+    QString mLastFileName;
 };
 #endif // MAINWINDOW_H

@@ -51,7 +51,7 @@ void PaintArea::paintEvent(QPaintEvent *event)
     painter.setBrush(QBrush(Qt::white, Qt::SolidPattern));
     painter.setFont(QFont("Monospace", 11, 2));
     // отрисовываем вершины в конце, чтобы перекрыть ими рёбра
-    int i = 1;
+    int i = 0;
     for (auto vertex : mGraph->getVertexList())
     {
         auto pos = vertex->getPosition();

@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
+#include <fstream>
+#include <QDir>
+#include <QFileDialog>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -33,26 +37,59 @@ void MainWindow::on_actionCreateNew_triggered()
 {
     out << "on_actionCreateNew_triggered" << endl;
     mGraf = hg::Hypergraphe();
+    ui->centralwidget->PaintGraph(&mGraf);
+    mLastFileName = QString();
 }
 
 void MainWindow::on_actionOpen_triggered()
 {
     out << "on_actionOpen_triggered" << endl;
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                    "C://",
+                                                    tr("Text files (*.txt)"));
+    out << fileName << endl;
+    if (fileName == QString())
+    {
+        return;
+    }
+    ReadFromFile(fileName.toStdString());
+    mLastFileName = fileName;
+    ui->centralwidget->PaintGraph(&mGraf);
 }
 
 void MainWindow::on_actionSave_triggered()
 {
-    out << "on_actionSave_triggered" << endl;
+    out << "on_actionSave_triggered " << mLastFileName << endl;
+    if (mLastFileName == QString())
+    {
+        on_actionSaveAs_triggered();
+    }
+    else
+    {
+        WriteToFile(mGraf, mLastFileName.toStdString());
+    }
 }
 
 void MainWindow::on_actionSaveAs_triggered()
 {
     out << "on_actionSaveAs_triggered" << endl;
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
+                                                    "C://",
+                                                    tr("Text files (*.txt)"));
+    out << fileName << endl;
+    if (fileName == QString())
+    {
+        return;
+    }
+    mLastFileName = fileName;
+    WriteToFile(mGraf, mLastFileName.toStdString());
 }
 
 void MainWindow::on_actionCloseFile_triggered()
 {
     out << "on_actionCloseFile_triggered" << endl;
+    on_actionSave_triggered();
+    on_actionCreateNew_triggered();
 }
 
 void MainWindow::on_actionOpenPlugins_triggered()
@@ -136,9 +173,82 @@ int MainWindow::FindVertex(const int x, const int y, const double r)
     return  numNearest;
 }
 
+bool MainWindow::WriteToFile(const hg::Hypergraphe& graf, const std::string fileName)
+{
+    // гиперграф хранит список номеров всех узлов и их координат и список каждого ребра с ему инцидентными вершинами
+    std::ofstream oFile(fileName);
+    if (!oFile.is_open())
+    {
+        return false;
+    }
+    // записываем вершины
+    auto vertexList = mGraf.getVertexList();
+    oFile << vertexList.size() << "\n";
+    if (vertexList.size() != 0)
+    {
+        for (auto it = vertexList.begin(); it != vertexList.end(); ++it)
+        {
+            oFile << (*it)->getId() << " " << (*it)->getPosition().first << " " << (*it)->getPosition().second << "\n";
+        }
+    }
+    // записываем рёбра
+    auto edgeList = mGraf.getEdgeList();
+    oFile << edgeList.size() << "\n";
+    if (edgeList.size() != 0)
+    {
+        for (auto itE = edgeList.begin(); itE != edgeList.end(); ++itE)
+        {
+            auto vList = (*itE)->getListVertex();
+            oFile << vList.size() << " ";
+            for (auto itV = vList.begin(); itV != vList.end(); ++itV)
+            {
+                oFile << (*itV)->getId() << " ";
+            }
+            oFile << "\n";
+        }
+    }
+    oFile.close();
 
+    return true;
+}
 
+bool MainWindow::ReadFromFile(const std::string fileName)
+{
+    std::ifstream iFile(fileName);
+    if (!iFile.is_open())
+    {
+        return false;
+    }
+    mGraf = hg::Hypergraphe();
+    // вершины
+    int vertexCount = 0;
+    iFile >> vertexCount;
+    QVector<int> vertexNums;
+    for (int i = 0; i < vertexCount; ++i)
+    {
+        int tmp, x, y;
+        iFile >> tmp >> x >> y;
+        mGraf.addVertex();
+        mGraf.getVertexByIndex(tmp)->setPosition(x, y);
+    }
+    // рёбра
+    int edgeCount = 0;
+    iFile >> edgeCount;
+    for (int i = 0; i < edgeCount; ++i)
+    {
+        int vCount = 0;
+        iFile >> vCount;
+        int edgeNum = mGraf.addEdge()->getId();
+        for (int j = 0; j < vCount; ++j)
+        {
+            int tmp;
+            iFile >> tmp;
+            mGraf.linkVertexAndEdge(mGraf.getVertexByIndex(tmp), mGraf.getEdgeByIndex(edgeNum));
+        }
+    }
 
+    return true;
+}
 
 
 
