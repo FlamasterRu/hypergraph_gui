@@ -236,9 +236,11 @@ bool MainWindow::WriteToFile(const hg::Hypergraphe& graf, const std::string file
     oFile << vertexList.size() << "\n";
     if (vertexList.size() != 0)
     {
+        int i = 0;
         for (auto it = vertexList.begin(); it != vertexList.end(); ++it)
         {
-            oFile << (*it)->getId() << " " << (*it)->getPosition().first << " " << (*it)->getPosition().second << "\n";
+            oFile << i << " " << (*it)->getPosition().first << " " << (*it)->getPosition().second << "\n";
+            ++i;
         }
     }
     // записываем рёбра
