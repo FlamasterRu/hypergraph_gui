@@ -146,6 +146,61 @@ namespace hg
 	}
 	///////////////////////////////////////////////////////
 
+    /////////////////////   delete
+    bool Hypergraphe::deleteVertex(const unsigned int index)
+    {
+        h_IsAdjacencyMatrixActual = false;
+        if (h_Index_Vertex.find(index) == h_Index_Vertex.end())
+        {
+            return false;
+        }
+
+        // отвязываем все рёбра от вершины
+        auto v = h_Index_Vertex[index];
+        for (auto e : h_ListEdge)
+        {
+            if (isVertexInEdge(v, e))
+            {
+                unlinkVertexAndEdge(v, e);
+            }
+        }
+
+        // удаляем индекс вершины
+        h_Index_Vertex.erase(index);
+
+        // удаляем саму вершину
+        h_ListVertex.remove(v);
+
+        return true;
+    }
+
+    bool Hypergraphe::deleteEdge(const unsigned int index)
+    {
+        h_IsAdjacencyMatrixActual = false;
+        if (h_Index_Edge.find(index) == h_Index_Edge.end())
+        {
+            return false;
+        }
+
+        // отвязываем все рёбра от вершины
+        auto e = h_Index_Edge[index];
+        for (auto v : h_ListVertex)
+        {
+            if (isVertexInEdge(v, e))
+            {
+                unlinkVertexAndEdge(v, e);
+            }
+        }
+
+        // удаляем индекс вершины
+        h_Index_Edge.erase(index);
+
+        // удаляем саму вершину
+        h_ListEdge.remove(e);
+
+        return true;
+    }
+    //////////////////////////////////////////////////////
 
 	////////////////////	get
 	const std::shared_ptr<Vertex> Hypergraphe::getVertexByIndex(const unsigned int index) const
@@ -349,6 +404,16 @@ namespace hg
 
 		return temp;
 	}
+
+    bool Hypergraphe::unlinkVertexAndEdge(const std::shared_ptr<Vertex>& v, const std::shared_ptr<Edge>& e)
+    {
+        h_IsAdjacencyMatrixActual = false;
+
+        v.get()->v_ListEdge.remove(e);
+        e.get()->e_ListVertex.remove(v);
+
+        return true;
+    }
 	///////////////////////////////////////////////////////
 
 

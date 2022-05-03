@@ -43,6 +43,7 @@ private slots:
 private:
     // методы
     int FindVertex(const int x, const int y, const double r);    // ищет вершину в окружности радиусом r
+    QVector<int> FindEdge(const QSet<int> vertexex);     // ищет ребра, содержащие вершины в списке
     bool WriteToFile(const hg::Hypergraphe& graf, const std::string fileName);
     bool ReadFromFile(const std::string fileName);
 

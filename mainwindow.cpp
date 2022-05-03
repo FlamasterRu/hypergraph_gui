@@ -127,6 +127,22 @@ void MainWindow::PaintAreaMouseClicked(int posX, int posY, Qt::MouseButton butto
                 mTempEdge.push_back(vertexId);
             }
         }
+        if (ui->actionDeleteVertex->isChecked())    // инструмент удалить вершину
+        {
+            int vertexId = FindVertex(posX, posY, RSEARCH);
+            if (vertexId != -1)
+            {
+                mGraf.deleteVertex(vertexId);
+            }
+        }
+        if (ui->actionDeleteEdge->isChecked())      // инструмент удалить ребро
+        {
+            int vertexId = FindVertex(posX, posY, RSEARCH);
+            if ( (vertexId != -1) && (!mTempEdge.contains(vertexId)) )
+            {
+                mTempEdge.push_back(vertexId);
+            }
+        }
     }
     else if (button == Qt::RightButton) // правой кнопкой завершаем действие
     {
@@ -143,6 +159,20 @@ void MainWindow::PaintAreaMouseClicked(int posX, int posY, Qt::MouseButton butto
                 {
                     auto vertex = mGraf.getVertexByIndex(id);
                     mGraf.linkVertexAndEdge(vertex, edge);
+                }
+            }
+            mTempEdge.clear();
+        }
+        if (ui->actionDeleteEdge->isChecked())  // инструмент удалить ребро
+        {
+            int vertexId = FindVertex(posX, posY, RSEARCH);
+            if ( (vertexId != -1) && (!mTempEdge.contains(vertexId)) )
+            {
+                mTempEdge.push_back(vertexId);
+                QVector<int> deleteEdges = FindEdge(mTempEdge.toSet());
+                for (int e : deleteEdges)
+                {
+                    mGraf.deleteEdge(e);
                 }
             }
             mTempEdge.clear();
@@ -171,6 +201,26 @@ int MainWindow::FindVertex(const int x, const int y, const double r)
         }
     }
     return  numNearest;
+}
+
+QVector<int> MainWindow::FindEdge(const QSet<int> vertexex)
+{
+    QVector<int> result;
+    auto allEdges = mGraf.getEdgeList();
+    for (auto itE = allEdges.begin(); itE != allEdges.end(); ++itE)
+    {
+        auto vertexList = (*itE)->getListVertex();
+        QSet<int> vertexexId;
+        for (auto itV = vertexList.begin(); itV != vertexList.end(); ++itV)
+        {
+            vertexexId.insert( (*itV)->getId() );
+        }
+        if (vertexexId.contains(vertexex))
+        {
+            result.push_back( (*itE)->getId() );
+        }
+    }
+    return result;
 }
 
 bool MainWindow::WriteToFile(const hg::Hypergraphe& graf, const std::string fileName)

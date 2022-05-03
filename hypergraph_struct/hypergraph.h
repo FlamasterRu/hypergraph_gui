@@ -49,6 +49,13 @@ namespace hg
 		////////////////////////
 
 
+        ///////     delete
+        bool deleteVertex(const unsigned int index);
+
+        bool deleteEdge(const unsigned int index);
+        ///////////////////////
+
+
 		///////		get
 		const AdjacencyMatrix& getAdjacencyMatrix();
 
@@ -89,6 +96,8 @@ namespace hg
 		const std::shared_ptr<Edge>  linkListVertex(const hg::ListVertex& v);
 
 		const std::shared_ptr<Vertex>  linkListEdge(const hg::ListEdge& e);
+
+        bool unlinkVertexAndEdge(const std::shared_ptr<Vertex>& v, const std::shared_ptr<Edge>& e);
 		////////////////////////
 
 
