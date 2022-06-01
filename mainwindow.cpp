@@ -8,8 +8,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    out(stdout)
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     setWindowTitle(QString::fromUtf8("Гиперграф"));
@@ -35,7 +34,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionCreateNew_triggered()
 {
-    out << "on_actionCreateNew_triggered" << endl;
     mGraf = hg::Hypergraphe();
     ui->centralwidget->PaintGraph(&mGraf);
     mLastFileName = QString();
@@ -43,11 +41,9 @@ void MainWindow::on_actionCreateNew_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    out << "on_actionOpen_triggered" << endl;
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
                                                     "C://",
                                                     tr("Text files (*.txt)"));
-    out << fileName << endl;
     if (fileName == QString())
     {
         return;
@@ -59,7 +55,6 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_actionSave_triggered()
 {
-    out << "on_actionSave_triggered " << mLastFileName << endl;
     if (mLastFileName == QString())
     {
         on_actionSaveAs_triggered();
@@ -72,11 +67,9 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionSaveAs_triggered()
 {
-    out << "on_actionSaveAs_triggered" << endl;
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
                                                     "C://",
                                                     tr("Text files (*.txt)"));
-    out << fileName << endl;
     if (fileName == QString())
     {
         return;
@@ -87,30 +80,24 @@ void MainWindow::on_actionSaveAs_triggered()
 
 void MainWindow::on_actionCloseFile_triggered()
 {
-    out << "on_actionCloseFile_triggered" << endl;
     on_actionSave_triggered();
     on_actionCreateNew_triggered();
 }
 
 void MainWindow::on_actionOpenPlugins_triggered()
 {
-    out << "on_actionOpenPlugins_triggered" << endl;
 }
 
 void MainWindow::on_actionHelp_triggered()
 {
-    out << "on_actionHelp_triggered" << endl;
 }
 
 void MainWindow::on_actionCursor_triggered(bool checked)
 {
-    out << "on_actionCursor_triggered: " << ui->actionCursor->isChecked() << " " << ui->actionAddVertex->isChecked() << " " << ui->actionDeleteVertex->isChecked() <<
-        " " << ui->actionAddEdge->isChecked() << " " << ui->actionDeleteEdge->isChecked() << endl;
 }
 
 void MainWindow::PaintAreaMouseClicked(int posX, int posY, Qt::MouseButton button)
 {
-    out << "MainWindow: " << posX << " " << posY << " " << button << endl;
     if (button == Qt::LeftButton)   // левой кнопкой начинаем действие
     {
         if (ui->actionAddVertex->isChecked())   // инструмент добавить вершину
@@ -177,10 +164,6 @@ void MainWindow::PaintAreaMouseClicked(int posX, int posY, Qt::MouseButton butto
             }
             mTempEdge.clear();
         }
-    }
-    else
-    {
-        std::cout << mGraf << std::endl;
     }
     ui->centralwidget->PaintGraph(&mGraf);
 }

@@ -52,8 +52,6 @@ private:
 
     // поля
     Ui::MainWindow *ui;
-    QTextStream out;    // для отображения в консоль промежуточной информации
-
 
     QActionGroup* mTools;
 
