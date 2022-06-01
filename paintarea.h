@@ -41,14 +41,14 @@ public:
     void PaintGraph(const hg::Hypergraphe* graph);  // передаёт граф для отрисовки
 
 signals:
-    void MouseClicked(int posX, int posY, Qt::MouseButton button);
+    void MouseClicked(int posX, int posY, Qt::MouseButton button);  // посылает сигнал, что нажата кнопка мыши
 
 
 private:
     // методы
     void FillColorList();   // добавляет цвета в список mColorList
-    void AddCurve(const Curve& c, QVector<Curve>& curves);
-    void PaintCurves(const QVector<Curve>& curves, QPainter& painter);
+    void AddCurve(const Curve& c, QVector<Curve>& curves);  // добавляет кривую в список
+    void PaintCurves(const QVector<Curve>& curves, QPainter& painter);  // отрисовывает все линии между точками
 
 
     // константы

@@ -23,7 +23,7 @@ void PaintArea::paintEvent(QPaintEvent *event)
 {
     if (mGraph == nullptr)
     {
-        return;
+        return; // чтобы не обращаться к пустому графу при инициализации виджетов
     }
     Q_UNUSED(event);
     QPainter painter(this); // Создаём объект отрисовщика
@@ -78,7 +78,6 @@ void PaintArea::FillColorList()
 {
     mColorsList.push_back(Qt::black);
     mColorsList.push_back(Qt::red);
-    mColorsList.push_back(Qt::darkRed);
     mColorsList.push_back(Qt::green);
     mColorsList.push_back(Qt::darkGreen);
     mColorsList.push_back(Qt::blue);
