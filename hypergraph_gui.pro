@@ -10,6 +10,7 @@ CONFIG += mumps5 armadillo
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    editor.cpp \
     hypergraph_struct/edge.cpp \
     hypergraph_struct/hypergraph.cpp \
     hypergraph_struct/vertex.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
     paintarea.cpp
 
 HEADERS += \
+    editor.h \
     hypergraph_struct/edge.h \
     hypergraph_struct/hypergraph.h \
     hypergraph_struct/type.h \
@@ -26,6 +28,7 @@ HEADERS += \
     paintarea.h
 
 FORMS += \
+    editor.ui \
     mainwindow.ui \
     paintarea.ui
 

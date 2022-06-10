@@ -106,8 +106,6 @@ namespace hg
 		this->h_IsAdjacencyMatrixActual = false;
 		this->h_ListEdge = h.h_ListEdge;
 		this->h_ListVertex = h.h_ListVertex;
-		this->h_NumOfEdge = h.h_NumOfEdge;
-		this->h_NumOfVertex = h.h_NumOfVertex;
 		return *this;
 	}
 
@@ -123,12 +121,12 @@ namespace hg
 	{
 		h_IsAdjacencyMatrixActual = false;
 
-		std::shared_ptr<Vertex> temp(new Vertex(h_NumOfVertex));
+        int id = FindVertexId();
+        std::shared_ptr<Vertex> temp(new Vertex(id));
 
 		h_ListVertex.push_back(temp);
-		h_Index_Vertex.insert(std::pair< unsigned int, std::shared_ptr<Vertex> >(h_NumOfVertex, temp));
+        h_Index_Vertex.insert(std::pair< unsigned int, std::shared_ptr<Vertex> >(id, temp));
 
-		++h_NumOfVertex;
 		return temp;
 	}
 
@@ -136,12 +134,12 @@ namespace hg
 	{
 		h_IsAdjacencyMatrixActual = false;
 
-		std::shared_ptr<Edge> temp(new Edge(h_NumOfEdge));
+        int id = FindEdgeId();
+        std::shared_ptr<Edge> temp(new Edge(id));
 
 		h_ListEdge.push_back(temp);
-		h_Index_Edge.insert(std::pair< unsigned int, std::shared_ptr<Edge> >(h_NumOfEdge, temp));
+        h_Index_Edge.insert(std::pair< unsigned int, std::shared_ptr<Edge> >(id, temp));
 
-		++h_NumOfEdge;
 		return temp;
 	}
 	///////////////////////////////////////////////////////
@@ -192,10 +190,10 @@ namespace hg
             }
         }
 
-        // удаляем индекс вершины
+        // удаляем индекс ребра
         h_Index_Edge.erase(index);
 
-        // удаляем саму вершину
+        // удаляем ребро
         h_ListEdge.remove(e);
 
         return true;
@@ -205,36 +203,36 @@ namespace hg
 	////////////////////	get
 	const std::shared_ptr<Vertex> Hypergraphe::getVertexByIndex(const unsigned int index) const
 	{
-		if (index >= h_NumOfVertex)
+        if (h_Index_Vertex.find(index) == h_Index_Vertex.end())
 		{
-			throw("index >= h_NumOfVertex");
+            throw("h_Index_Vertex.find(index) == h_Index_Vertex.end()");
 		}
 		return (*h_Index_Vertex.find(index)).second;
 	}
 
 	const std::shared_ptr<Edge> Hypergraphe::getEdgeByIndex(const unsigned int index) const
 	{
-		if (index >= h_NumOfEdge)
+        if (h_Index_Edge.find(index) == h_Index_Edge.end())
 		{
-			throw("index >= h_NumOfEdge");
+            throw("h_Index_Edge.find(index) == h_Index_Edge.end()");
 		}
 		return (*h_Index_Edge.find(index)).second;
 	}
 
 	const std::shared_ptr<Vertex> Hypergraphe::operator ()(const unsigned int index) const
 	{
-		if (index >= h_NumOfVertex)
+        if (h_Index_Vertex.find(index) == h_Index_Vertex.end())
 		{
-			throw("index >= h_NumOfVertex");
+            throw("h_Index_Vertex.find(index) == h_Index_Vertex.end()");
 		}
 		return (*h_Index_Vertex.find(index)).second;
 	}
 
 	const std::shared_ptr<Edge> Hypergraphe::operator [](const unsigned int index) const
 	{
-		if (index >= h_NumOfEdge)
+        if (h_Index_Edge.find(index) == h_Index_Edge.end())
 		{
-			throw("index >= h_NumOfEdge");
+            throw("h_Index_Edge.find(index) == h_Index_Edge.end()");
 		}
 		return (*h_Index_Edge.find(index)).second;
 	}
@@ -271,9 +269,9 @@ namespace hg
 
 	const std::string& Hypergraphe::getVertexDateString(const unsigned int index)
 	{
-		if (index >= h_NumOfVertex)
+        if (h_Index_Vertex.find(index) == h_Index_Vertex.end())
 		{
-			throw("index >= h_NumOfVertex");
+            throw("h_Index_Vertex.find(index) == h_Index_Vertex.end()");
 		}
 		return (*h_Index_Vertex.find(index)).second->getDateString();
 	}
@@ -285,9 +283,9 @@ namespace hg
 
 	int Hypergraphe::getVertexWeight(const unsigned int index)
 	{
-		if (index >= h_NumOfVertex)
+        if (h_Index_Vertex.find(index) == h_Index_Vertex.end())
 		{
-			throw("index >= h_NumOfVertex");
+            throw("h_Index_Vertex.find(index) == h_Index_Vertex.end()");
 		}
 		return (*h_Index_Vertex.find(index)).second->getWeight();
 	}
@@ -299,9 +297,9 @@ namespace hg
 
 	const std::string& Hypergraphe::getEgdeDateString(const unsigned int index)
 	{
-		if (index >= h_NumOfEdge)
+        if (h_Index_Edge.find(index) == h_Index_Edge.end())
 		{
-			throw("index >= h_NumOfEdge");
+            throw("h_Index_Edge.find(index) == h_Index_Edge.end()");
 		}
 		return (*h_Index_Edge.find(index)).second->getDateString();
 	}
@@ -313,9 +311,9 @@ namespace hg
 
 	int Hypergraphe::getEdgeWeight(const unsigned int index)
 	{
-		if (index >= h_NumOfEdge)
+        if (h_Index_Edge.find(index) == h_Index_Edge.end())
 		{
-			throw("index >= h_NumOfEdge");
+            throw("h_Index_Edge.find(index) == h_Index_Edge.end()");
 		}
 		return (*h_Index_Edge.find(index)).second->getWeight();
 	}
@@ -333,13 +331,16 @@ namespace hg
 		}
 		else
         {
-            h_AdjacencyMatrixInt.resize(h_NumOfVertex, h_NumOfEdge);
+            h_AdjacencyMatrixInt.resize(getNumVertex(), getNumEdge());
+            int i = 0, j = 0;
 			for (auto it1 = h_ListVertex.begin(); it1 != h_ListVertex.end(); ++it1)
 			{
 				for (auto it2 = (*it1).get()->getListEdge().begin(); it2 != (*it1).get()->getListEdge().end(); ++it2)
 				{
-                    h_AdjacencyMatrixInt( (*it1).get()->v_Id, (*it2).get()->e_Id ) = 1;
+                    h_AdjacencyMatrixInt( i, j ) = 1;
+                    ++j;
 				}
+                ++i;
 			}
             h_IsAdjacencyMatrixActual = true;
             return h_AdjacencyMatrixInt;
@@ -451,5 +452,27 @@ namespace hg
 		return temp;
 	}
 	///////////////////////////////////////////////////////
+
+    int Hypergraphe::FindVertexId()
+    {
+        for (int i = 0; i < 10000000; ++i)
+        {
+            if (h_Index_Vertex.find(i) == h_Index_Vertex.end())
+            {
+                return i;
+            }
+        }
+    }
+
+    int Hypergraphe::FindEdgeId()
+    {
+        for (int i = 0; i < 10000000; ++i)
+        {
+            if (h_Index_Edge.find(i) == h_Index_Edge.end())
+            {
+                return i;
+            }
+        }
+    }
 
 }	// namespace hypgr

@@ -21,9 +21,6 @@ namespace hg
 		EdgeByIndex h_Index_Edge;				// std::map< unsigned int, std::shared_ptr<Edge> >
 
 		bool h_IsAdjacencyMatrixActual = false;
-
-		unsigned int h_NumOfVertex = 0;	// нумерация вершин с 0
-		unsigned int h_NumOfEdge = 0;		// нумерация ребер с 0
 		///////
 
 
@@ -106,6 +103,9 @@ namespace hg
 
 		bool isVertexInEdge(const std::shared_ptr<Vertex> v, const std::shared_ptr<Edge> e) const;
 		////////////////////////
+
+        int FindVertexId();
+        int FindEdgeId();
 
 	};
 
