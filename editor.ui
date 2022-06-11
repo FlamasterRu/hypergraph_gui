@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Drawer</class>
- <widget class="QWidget" name="Drawer">
+ <class>Editor</class>
+ <widget class="QWidget" name="Editor">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -33,9 +33,15 @@
     <widget class="QWidget" name="widget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <widget class="QPushButton" name="pushButtonCursor">
+       <widget class="QToolButton" name="toolButtonCursor">
         <property name="text">
          <string>Курсор</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -56,9 +62,12 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButtonAddVertex">
+       <widget class="QToolButton" name="toolButtonAddVertex">
         <property name="text">
          <string>Добавить вершину</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -79,9 +88,12 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButtonDeleteVertex">
+       <widget class="QToolButton" name="toolButtonDeleteVertex">
         <property name="text">
          <string>Удалить вершину</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -102,9 +114,12 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButtonAddEdge">
+       <widget class="QToolButton" name="toolButtonAddEdge">
         <property name="text">
          <string>Добавить ребро</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -125,9 +140,12 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButtonDeleteEdge">
+       <widget class="QToolButton" name="toolButtonDeleteEdge">
         <property name="text">
          <string>Удалить ребро</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

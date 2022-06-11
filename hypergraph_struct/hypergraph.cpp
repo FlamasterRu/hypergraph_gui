@@ -335,9 +335,13 @@ namespace hg
             int i = 0, j = 0;
 			for (auto it1 = h_ListVertex.begin(); it1 != h_ListVertex.end(); ++it1)
 			{
-				for (auto it2 = (*it1).get()->getListEdge().begin(); it2 != (*it1).get()->getListEdge().end(); ++it2)
+                j = 0;
+                for (auto it2 = h_ListEdge.begin(); it2 != h_ListEdge.end(); ++it2)
 				{
-                    h_AdjacencyMatrixInt( i, j ) = 1;
+                    if (isVertexInEdge(*it1, *it2))
+                    {
+                        h_AdjacencyMatrixInt( i, j ) = 1;
+                    }
                     ++j;
 				}
                 ++i;
