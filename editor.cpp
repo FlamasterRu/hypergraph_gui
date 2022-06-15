@@ -150,7 +150,6 @@ void Editor::PaintAreaMouseClicked(int posX, int posY, Qt::MouseButton button)
     }
     Repaint();
 }
-
 void Editor::Repaint()
 {
     mLastStruct = BuildDrawerStruct();
@@ -181,7 +180,6 @@ bool Editor::WriteGraf(const QString& fileName, const FileType fileType)
     oFile.close();
     return true;
 }
-
 bool Editor::ReadGraf(const QString& fileName)
 {
     std::ifstream iFile(fileName.toStdString());
@@ -189,17 +187,28 @@ bool Editor::ReadGraf(const QString& fileName)
     {
         return false;
     }
-
+    int type;
+    iFile >> type;
+    if (type == FileType::Custom)
+    {
+        mGraf.ReadFromFileCustom(iFile);
+    }
+    else if (type == FileType::EdgeList)
+    {
+        mGraf.ReadFromFileEdgeList(iFile);
+    }
+    else if (type == FileType::IncidenceMatrix)
+    {
+        mGraf.ReadFromFileMatrix(iFile);
+    }
     iFile.close();
     return true;
 }
-
 bool Editor::ClearGraf()
 {
     mGraf = hg::Hypergraphe();
     return true;
 }
-
 
 int Editor::FindVertex(const int x, const int y, const double r)
 {
@@ -218,12 +227,10 @@ int Editor::FindVertex(const int x, const int y, const double r)
     }
     return  numNearest;
 }
-
 int product(int Px, int Py, int Ax, int Ay, int Bx, int By)
 {
   return (Bx - Ax) * (Py - Ay) - (By - Ay) * (Px - Ax);
 }
-
 int Editor::FindEdge(const int x, const int y)
 {
     int result = -1;
@@ -255,7 +262,6 @@ int Editor::FindEdge(const int x, const int y)
     }
     return result;
 }
-
 QVector<int> Editor::FindEdge(const QSet<int> vertexex)
 {
     QVector<int> result;
@@ -383,125 +389,6 @@ void Editor::MoveLines(QVector<Line>& lines)
     }
 }
 
-//void PaintArea::PaintCurves(const QVector<Curve>& curves, QPainter& painter)
-//{
-//    for (const Curve& c : curves)
-//    {
-//        if (c.colors.size() == 1)
-//        {
-//            painter.setPen(QPen(c.colors.first(), EDGEWIDTH));
-//            painter.drawLine(c.x1, c.y1, c.x2, c.y2);
-//        }
-//        else
-//        {
-//            // строим несколько параллельных прямых
-//            double x1 = c.x1, x2 = c.x2, y1 = c.y1, y2 = c.y2;
-//            // находим перпендикуляр к прямой между двумя точками
-//            QVector2D n( (y1-y2)/(x2 - x1), 1 );
-//            n.normalize();  // нормируем
-
-//            // начальные координаты набора параллельных прямых
-//            double x0l = x1 - ((EDGEWIDTH/2)*(c.colors.size()-1) + 1) * n.x();
-//            double y0l = y1 - ((EDGEWIDTH/2)*(c.colors.size()-1) + 1) * n.y();
-//            double x0r = x2 - ((EDGEWIDTH/2)*(c.colors.size()-1) + 1) * n.x();
-//            double y0r = y2 - ((EDGEWIDTH/2)*(c.colors.size()-1) + 1) * n.y();
-//            for (int i = 0; i < c.colors.size(); ++i)
-//            {
-//                double nx1 = x0l + n.x()*i*(EDGEWIDTH+1);
-//                double ny1 = y0l + n.y()*i*(EDGEWIDTH+1);
-//                double nx2 = x0r + n.x()*i*(EDGEWIDTH+1);
-//                double ny2 = y0r + n.y()*i*(EDGEWIDTH+1);
-
-//                painter.setPen(QPen(c.colors.at(i), EDGEWIDTH));
-//                painter.drawLine(nx1, ny1, nx2, ny2);
-//            }
-//        }
-//    }
-//}
-
-
-//bool MainWindow::WriteToFile(const hg::Hypergraphe& graf, const std::string fileName)
-//{
-//    // гиперграф хранит список номеров всех узлов и их координат и список каждого ребра с ему инцидентными вершинами
-//    std::ofstream oFile(fileName);
-//    if (!oFile.is_open())
-//    {
-//        return false;
-//    }
-//    // записываем вершины
-//    auto vertexList = mGraf.getVertexList();
-//    oFile << vertexList.size() << "\n";
-//    if (vertexList.size() != 0)
-//    {
-//        int i = 0;
-//        for (auto it = vertexList.begin(); it != vertexList.end(); ++it)
-//        {
-//            oFile << i << " " << (*it)->getPosition().first << " " << (*it)->getPosition().second << "\n";
-//            ++i;
-//        }
-//    }
-//    // записываем рёбра
-//    auto edgeList = mGraf.getEdgeList();
-//    oFile << edgeList.size() << "\n";
-//    if (edgeList.size() != 0)
-//    {
-//        for (auto itE = edgeList.begin(); itE != edgeList.end(); ++itE)
-//        {
-//            auto vList = (*itE)->getListVertex();
-//            oFile << vList.size() << " ";
-//            for (auto itV = vList.begin(); itV != vList.end(); ++itV)
-//            {
-//                oFile << (*itV)->getId() << " ";
-//            }
-//            oFile << "\n";
-//        }
-//    }
-//    oFile.close();
-
-//    return true;
-//}
-
-//bool MainWindow::ReadFromFile(const std::string fileName)
-//{
-//    std::ifstream iFile(fileName);
-//    if (!iFile.is_open())
-//    {
-//        return false;
-//    }
-//    mGraf = hg::Hypergraphe();
-//    // вершины
-//    int vertexCount = 0;
-//    iFile >> vertexCount;
-//    QVector<int> vertexNums;
-//    for (int i = 0; i < vertexCount; ++i)
-//    {
-//        int tmp, x, y;
-//        iFile >> tmp >> x >> y;
-//        mGraf.addVertex();
-//        mGraf.getVertexByIndex(tmp)->setPosition(x, y);
-//    }
-//    // рёбра
-//    int edgeCount = 0;
-//    iFile >> edgeCount;
-//    for (int i = 0; i < edgeCount; ++i)
-//    {
-//        int vCount = 0;
-//        iFile >> vCount;
-//        int edgeNum = mGraf.addEdge()->getId();
-//        for (int j = 0; j < vCount; ++j)
-//        {
-//            int tmp;
-//            iFile >> tmp;
-//            mGraf.linkVertexAndEdge(mGraf.getVertexByIndex(tmp), mGraf.getEdgeByIndex(edgeNum));
-//        }
-//    }
-
-//    return true;
-//}
-
-
-
-
 void Editor::on_toolButtonCursor_clicked(bool checked)
 {
     if (checked)
@@ -576,7 +463,6 @@ void Editor::on_toolButtonDeleteEdge_clicked(bool checked)
     }
     Repaint();
 }
-
 
 QColor Editor::IndToColor(const int index)
 {

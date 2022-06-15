@@ -39,7 +39,6 @@ public:
 
     bool WriteGraf(const QString& fileName, const FileType fileType);
     bool ReadGraf(const QString& fileName);
-
     bool ClearGraf();
 
 signals:
@@ -48,26 +47,16 @@ signals:
 public slots:
     void PaintAreaMouseClicked(int posX, int posY, Qt::MouseButton button);
 
-
 private slots:
     void on_toolButtonCursor_clicked(bool checked);
-
     void on_toolButtonAddVertex_clicked(bool checked);
-
     void on_toolButtonDeleteVertex_clicked(bool checked);
-
     void on_toolButtonAddEdge_clicked(bool checked);
-
     void on_toolButtonDeleteEdge_clicked(bool checked);
-
     void on_spinBoxVertexSize_valueChanged(int arg1);
-
     void on_comboBoxVertexFigure_currentIndexChanged(int index);
-
     void on_comboBoxVertexColor_currentIndexChanged(int index);
-
     void on_spinBoxEdgeWidth_valueChanged(int arg1);
-
     void on_comboBoxEdgeColor_currentIndexChanged(int index);
 
 private:
@@ -105,15 +94,6 @@ struct Line
     int x1, y1, x2, y2, width;
     QColor color;
     bool solid = true;
-    bool Contain(const int x, const int y) const
-    {
-        if ( (x1 == x) && (y1 == y) )
-            return true;
-        else if ( (x2 == x) && (y2 == y) )
-            return true;
-        else
-            return false;
-    }
     bool operator== (const Line& r) const
     {
         if ( (x1 == r.x1) && (y1 == r.y1) && (x2 == r.x2) && (y2 == r.y2))
