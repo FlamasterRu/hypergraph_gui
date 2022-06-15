@@ -1,7 +1,6 @@
 #pragma once
 #include "type.h"
 #include "hypergraph.h"
-#include <QColor>
 
 
 namespace hg

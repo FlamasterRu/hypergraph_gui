@@ -33,6 +33,16 @@ namespace hg
 		return e_Str;
 	}
 
+    const int Edge::getSize() const
+    {
+        return e_Size;
+    }
+
+    const QColor Edge::getColor() const
+    {
+        return e_Color;
+    }
+
 	void Edge::setWeight(const int w)
 	{
 		e_Weight = w;
@@ -42,5 +52,15 @@ namespace hg
 	{
 		e_Str = s;
 	}
+
+    void Edge::setSize(const int size)
+    {
+        e_Size = size;
+    }
+
+    void Edge::setColor(const QColor color)
+    {
+        e_Color = color;
+    }
 
 }	// namespace hypgr

@@ -16,7 +16,6 @@ enum FileType
     IncidenceMatrix
 };
 
-struct Curve;
 struct Line;
 struct Circle;
 struct Square;
@@ -67,17 +66,23 @@ private slots:
 
     void on_comboBoxVertexColor_currentIndexChanged(int index);
 
+    void on_spinBoxEdgeWidth_valueChanged(int arg1);
+
+    void on_comboBoxEdgeColor_currentIndexChanged(int index);
+
 private:
 
     // для редактирования и отображения
     int FindVertex(const int x, const int y, const double r);
     QVector<int> FindEdge(const QSet<int> vertexex);
+    int FindEdge(const int x, const int y);
     DrawerStruct BuildDrawerStruct();
-    void AddCurve(const Curve& c, QVector<Curve>& curves);
     QColor IndToColor(const int index);
     int ColorToInd(const QColor color);
     void Repaint();
     void InitVertexEditor(const int vertexId);
+    void InitEdgeEditor(const int edgeId);
+    void MoveLines(QVector<Line>& lines);
 
     const int FindVertexRadius = 20;
 
@@ -86,26 +91,38 @@ private:
     QList<int> mTempEdge;
     QVector<QColor> mColorList;
     int mChosedVertexId = -1;
+    int mChosedEdgeId = -1;
+    DrawerStruct mLastStruct;
 };
 
-struct Curve
-{
-    Curve(){};
-    Curve(const int x1_, const int y1_, const int x2_, const int y2_) : x1(x1_), y1(y1_), x2(x2_), y2(y2_) {}
-    int x1;
-    int y1;
-    int x2;
-    int y2;
-    QVector<QColor> colors;
-};
 
 struct Line
 {
     Line(){;}
-    Line (const int x1_, const int y1_, const int x2_, const int y2_, const int width_, const QColor c_)
-        : x1(x1_), y1(y1_), x2(x2_), y2(y2_), width(width_), color(c_){;}
+    Line (const int id_, const int x1_, const int y1_, const int x2_, const int y2_, const int width_, const QColor c_)
+        : edgeId(id_), x1(x1_), y1(y1_), x2(x2_), y2(y2_), width(width_), color(c_){;}
+    int edgeId;
     int x1, y1, x2, y2, width;
     QColor color;
+    bool solid = true;
+    bool Contain(const int x, const int y) const
+    {
+        if ( (x1 == x) && (y1 == y) )
+            return true;
+        else if ( (x2 == x) && (y2 == y) )
+            return true;
+        else
+            return false;
+    }
+    bool operator== (const Line& r) const
+    {
+        if ( (x1 == r.x1) && (y1 == r.y1) && (x2 == r.x2) && (y2 == r.y2))
+            return true;
+        else if ( (x1 == r.x2) && (y1 == r.y2) && (x2 == r.x1) && (y2 == r.y1))
+            return true;
+        else
+            return false;
+    }
 };
 
 struct Circle

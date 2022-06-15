@@ -11,15 +11,13 @@ namespace hg
 
 	protected:
 
-		///////
 		unsigned int e_Id;
-
 		int e_Weight = 1;
-
 		std::string e_Str = "";
+        int e_Size = 4;
+        QColor e_Color = Qt::black;
 
 		ListVertex e_ListVertex;
-		///////
 
 	public:
 
@@ -27,11 +25,16 @@ namespace hg
 
 		unsigned int getId() const;
 		const hg::ListVertex& getListVertex() const;
+
 		int getWeight() const;
 		const std::string& getDateString() const;
+        const int getSize() const;
+        const QColor getColor() const;
 
 		void setWeight(const int w);
 		void setDataString(const std::string& s);
+        void setSize(const int size);
+        void setColor(const QColor color);
 
 		Edge(const Edge& e) = delete;
 		Edge(const Edge&& e) = delete;

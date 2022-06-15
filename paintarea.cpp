@@ -33,6 +33,10 @@ void PaintArea::paintEvent(QPaintEvent *event)
     for (const Line& l : mDrawerStruct.lines)
     {
         painter.setPen(QPen(l.color, l.width));
+        if (!l.solid)
+        {
+            painter.setPen(QPen(l.color, l.width, Qt::DashLine));
+        }
         painter.drawLine(l.x1, l.y1, l.x2, l.y2);
     }
 
