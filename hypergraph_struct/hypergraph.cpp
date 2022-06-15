@@ -169,6 +169,19 @@ namespace hg
         // удаляем саму вершину
         h_ListVertex.remove(v);
 
+        std::vector<int> indexes;
+        for (auto e : h_ListEdge)
+        {
+            if (e->getListVertex().size() <= 1)
+            {
+                indexes.push_back(e->getId());
+            }
+        }
+        for (int i : indexes)
+        {
+            deleteEdge(i);
+        }
+
         return true;
     }
 
@@ -478,5 +491,59 @@ namespace hg
             }
         }
     }
+
+
+    bool Hypergraphe::WriteToFileMatrix(std::ostream& out)
+    {
+        out << h_ListVertex.size() << "\n";
+        for (auto v : h_ListVertex)
+        {
+            out << v->getId() << " " << v->getPosition().first << " " << v->getPosition().second << "\n";
+        }
+        out << (*this) << "\n";
+        return true;
+    }
+    bool Hypergraphe::WriteToFileEdgeList(std::ostream& out)
+    {
+        out << h_ListVertex.size() << "\n";
+        for (auto v : h_ListVertex)
+        {
+            out << v->getId() << " " << v->getPosition().first << " " << v->getPosition().second << "\n";
+        }
+        out << h_ListEdge.size() << "\n";
+        for (auto e : h_ListEdge)
+        {
+            for (auto v : e->getListVertex())
+            {
+                out << v->getId() << " ";
+            }
+            out << "\n";
+        }
+        return true;
+    }
+    bool Hypergraphe::WriteToFileCustom(std::ostream& out)
+    {
+        out << h_ListVertex.size() << "\n";
+        for (auto v : h_ListVertex)
+        {
+            out << v->getId() << " " << v->getPosition().first << " " << v->getPosition().second << " " << v->getColor().name().toStdString() << " " <<
+                   v->getFigure() << " " << v->getSize() << "\n";
+        }
+        out << h_ListEdge.size() << "\n";
+        for (auto e : h_ListEdge)
+        {
+            out << e->getListVertex().size() << " " << e->getColor().name().toStdString() << " " << e->getSize() << "\n";
+            for (auto v : e->getListVertex())
+            {
+                out << v->getId() << " ";
+            }
+            out << "\n";
+        }
+        return true;
+    }
+
+
+
+
 
 }	// namespace hypgr

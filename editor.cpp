@@ -4,6 +4,7 @@
 #include <ctime>
 #include <QList>
 #include <QVector2D>
+#include <fstream>
 
 Editor::Editor(QWidget *parent) :
     QWidget(parent),
@@ -159,16 +160,43 @@ void Editor::Repaint()
 
 bool Editor::WriteGraf(const QString& fileName, const FileType fileType)
 {
+    std::ofstream oFile(fileName.toStdString());
+    oFile << fileType << "\n";
+    if (!oFile.is_open())
+    {
+        return false;
+    }
+    if (fileType == FileType::Custom)
+    {
+        mGraf.WriteToFileCustom(oFile);
+    }
+    else if (fileType == FileType::EdgeList)
+    {
+        mGraf.WriteToFileEdgeList(oFile);
+    }
+    else if (fileType == FileType::IncidenceMatrix)
+    {
+        mGraf.WriteToFileMatrix(oFile);
+    }
+    oFile.close();
     return true;
 }
 
 bool Editor::ReadGraf(const QString& fileName)
 {
+    std::ifstream iFile(fileName.toStdString());
+    if (!iFile.is_open())
+    {
+        return false;
+    }
+
+    iFile.close();
     return true;
 }
 
 bool Editor::ClearGraf()
 {
+    mGraf = hg::Hypergraphe();
     return true;
 }
 

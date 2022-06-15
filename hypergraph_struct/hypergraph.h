@@ -102,6 +102,10 @@ namespace hg
 		friend std::ostream& operator<< (std::ostream& out, Hypergraphe& h);
 
 		bool isVertexInEdge(const std::shared_ptr<Vertex> v, const std::shared_ptr<Edge> e) const;
+
+        bool WriteToFileMatrix(std::ostream& out);
+        bool WriteToFileEdgeList(std::ostream& out);
+        bool WriteToFileCustom(std::ostream& out);
 		////////////////////////
 
         int FindVertexId();
