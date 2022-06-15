@@ -30,4 +30,10 @@ namespace hg
 	typedef std::map< unsigned int, std::shared_ptr<Edge> >
 		EdgeByIndex;
 
+    enum VertexFigure
+    {
+        Circle,
+        Square
+    };
+
 }	// namespace hypgr

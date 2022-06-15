@@ -47,7 +47,7 @@ void PaintArea::paintEvent(QPaintEvent *event)
     {
         painter.setPen(QPen(s.borderColor, s.borderWidth, Qt::SolidLine, Qt::FlatCap));
         painter.setBrush(QBrush(s.fillColor, Qt::SolidPattern));
-        painter.drawRect(s.x, s.y, s.width, s.height);
+        painter.drawRect(s.x, s.y, s.size, s.size);
     }
 
     // текст всегда в конце

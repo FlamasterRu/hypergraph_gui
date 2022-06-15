@@ -38,6 +38,21 @@ namespace hg
         return std::pair<int, int>(v_PosX, v_PosY);
     }
 
+    const QColor Vertex::getColor() const
+    {
+        return v_Color;
+    }
+
+    const int Vertex::getSize() const
+    {
+        return v_Size;
+    }
+
+    const VertexFigure Vertex::getFigure() const
+    {
+        return v_Figure;
+    }
+
 	void Vertex::setWeight(const int w)
 	{
 		v_Weight = w;
@@ -52,6 +67,21 @@ namespace hg
     {
         v_PosX = posX;
         v_PosY = posY;
+    }
+
+    void Vertex::setColor(const QColor c)
+    {
+        v_Color = c;
+    }
+
+    void Vertex::setSize(const int size)
+    {
+        v_Size = size;
+    }
+
+    void Vertex::setFigure(const VertexFigure fig)
+    {
+        v_Figure = fig;
     }
 
 }	// namespace hypgr

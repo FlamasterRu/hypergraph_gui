@@ -61,6 +61,12 @@ private slots:
 
     void on_toolButtonDeleteEdge_clicked(bool checked);
 
+    void on_spinBoxVertexSize_valueChanged(int arg1);
+
+    void on_comboBoxVertexFigure_currentIndexChanged(int index);
+
+    void on_comboBoxVertexColor_currentIndexChanged(int index);
+
 private:
 
     // для редактирования и отображения
@@ -68,11 +74,18 @@ private:
     QVector<int> FindEdge(const QSet<int> vertexex);
     DrawerStruct BuildDrawerStruct();
     void AddCurve(const Curve& c, QVector<Curve>& curves);
+    QColor IndToColor(const int index);
+    int ColorToInd(const QColor color);
+    void Repaint();
+    void InitVertexEditor(const int vertexId);
 
+    const int FindVertexRadius = 20;
 
     Ui::Editor *ui;
     hg::Hypergraphe mGraf;
     QList<int> mTempEdge;
+    QVector<QColor> mColorList;
+    int mChosedVertexId = -1;
 };
 
 struct Curve
@@ -107,9 +120,9 @@ struct Circle
 struct Square
 {
     Square(){;}
-    Square (const int x_, const int y_, const int width_, const int height_, const int borderWidth_, const QColor borderColor_, const QColor fillColor_)
-        : x(x_), y(y_), width(width_), height(height_), borderWidth(borderWidth_), borderColor(borderColor_), fillColor(fillColor_){;}
-    int x, y, width, height, borderWidth;
+    Square (const int x_, const int y_, const int size_, const int borderWidth_, const QColor borderColor_, const QColor fillColor_)
+        : x(x_), y(y_), size(size_), borderWidth(borderWidth_), borderColor(borderColor_), fillColor(fillColor_){;}
+    int x, y, size, borderWidth;
     QColor borderColor, fillColor;
 };
 
