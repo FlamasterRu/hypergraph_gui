@@ -71,7 +71,7 @@ void Editor::PaintAreaMouseClicked(int posX, int posY, Qt::MouseButton button)
                 mTempEdge.push_back(vertexId);
             }
         }
-        if (ui->toolButtonCursor->isChecked())  // режим редактирования вершин
+        if (ui->toolButtonCursor->isChecked())  // режим редактирования
         {
             int vertexId = FindVertex(posX, posY, FindVertexRadius);
             if (vertexId != -1)
@@ -137,6 +137,14 @@ void Editor::PaintAreaMouseClicked(int posX, int posY, Qt::MouseButton button)
                 }
             }
             mTempEdge.clear();
+        }
+        if (ui->toolButtonCursor->isChecked())  // режим редактирования вершин
+        {
+            if (mChosedVertexId != -1)
+            {
+                auto vertex = mGraf.getVertexByIndex(mChosedVertexId);
+                vertex->setPosition(posX, posY);
+            }
         }
     }
     Repaint();
@@ -328,7 +336,6 @@ void Editor::MoveLines(QVector<Line>& lines)
             {
                 allWidth += lines[index].width;
             }
-            std::cout << allWidth << std::endl;
             double x0l = x1 - (allWidth/2. - lines[toMoveInd.first()].width/2) * n.x();
             double y0l = y1 - (allWidth/2. - lines[toMoveInd.first()].width/2) * n.y();
             double x0r = x2 - (allWidth/2. - lines[toMoveInd.first()].width/2) * n.x();
@@ -712,6 +719,7 @@ void Editor::on_comboBoxVertexColor_currentIndexChanged(int index)
         Repaint();
     }
 }
+
 
 
 
