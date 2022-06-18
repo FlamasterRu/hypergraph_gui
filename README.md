@@ -1,9 +1,15 @@
 Необходимые компоненты:
+
 QtCreator 4.15
+
 Компилятор Microsoft Visual C++ Compiler 12.0 (x86_amd64)
+
 armadillo 6.5
+
 Qt 4.8.6
+
 CMake 3.19.2
+
 
 
 
